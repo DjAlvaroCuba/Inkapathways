@@ -12,12 +12,16 @@ class TokenAuthentication(BaseAuthentication):
         if not auth_header:
             return None  # Si no se provee un token, no autenticamos
 
-        # Verificar que el formato del token sea 'Bearer <token>'
-        if not auth_header.startswith('Bearer '):
-            return None  # Formato incorrecto, no autenticamos
+        # Dividir el header en partes para evitar errores de índice
+        parts = auth_header.split()
 
-        # Extraer solo el token
-        token_verificacion = auth_header.split()[1]
+        # Verificar que el formato del token sea 'Bearer <token>' o solo '<token>'
+        if len(parts) == 2 and parts[0].lower() == 'bearer':
+            token_verificacion = parts[1]  # Caso 'Bearer token'
+        elif len(parts) == 1:
+            token_verificacion = parts[0]  # Caso solo 'token'
+        else:
+            return None  # Formato incorrecto
 
         try:
             # Buscamos al usuario en la base de datos con el token de acceso

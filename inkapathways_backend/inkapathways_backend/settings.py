@@ -154,47 +154,45 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'Viaja con inteligencia: Inka Pathways y su IA predictiva te ayudan a descubrir lo mejor de cada destino, personalizando tu experiencia de viaje con Inteligencia Artificial',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
-    'TOS': 'https://www.xvideos.com',
+    #'TOS': '',(Terminos y servicios)
     'CONTACT': {
-        'name': 'Soporte de INKAPATHWAYS',
+        'name': 'Equipo de soporte',
         'url': '',
-        'email': 'support@inkapathways.com',
+        'email': 'Famousalvarocubaporras@gmail.com',
     },
-    'LICENSE': {
-        'name': 'Licencia',
-        'url': '',
-    },
+    #'LICENSE': {
+    #    'name': 'Licencia',
+    #    'url': 'www.inkapathways.com',
+    #},
     'SERVERS': [
         {
-            'url': 'https://api.inkapathways.com/v1',
-            'description': 'Servidor de producción',
-            'variables': {
-                'version': {
-                    'default': 'v1',
-                    'description': 'Versión de la API'
-                }
-            }
-        },
-        {
-            'url': 'https://api.inkapathways.com/v2',
-            'description': 'Servidor de producción 2',
-            'variables': {
-                'version': {
-                    'default': 'v2',
-                    'description': 'Versión de la API V2'
-                }
-            }
-        },
-
-        {
-            'url': 'https://testing.inkapathways.com/v1',
-            'description': 'Servidor de pruebas'
+            'url': 'http://127.0.0.1:8000/',
+            'description': 'Servidor principal',
+            #'variables': {
+            #    'version': {
+            #        'default': 'v1',
+            #        'description': 'Versión de la API'
+            #    }
+            #}
         }
+        
+        #{
+        #    'url': 'https://api.inkapathways.com/v2',
+        #    'description': 'Servidor de producción 2',
+        #    #'variables': {
+        #    #    'version': {
+        #    #        'default': 'v2',
+        #    #        'description': 'Versión de la API V2'
+        #    #    }
+        #    #}
+        #},
+
+       
     ],
-    'TAGS': [
-        # {'name': 'Turistas', 'description': 'Operaciones sobre turistas'},
-        # {'name': 'Usuarios', 'description': 'Operaciones sobre usuario'},
-        # {'name': 'Tripticos', 'description': 'Operaciones sobre tripticos'},
-        {'name': 'ModeloV1', 'description': 'Operaciones sobre ModeloV1'},
-    ],
+    #'TAGS': [
+    #    # {'name': 'Turistas', 'description': 'Operaciones sobre turistas'},
+    #    # {'name': 'Usuarios', 'description': 'Operaciones sobre usuario'},
+    #    # {'name': 'Tripticos', 'description': 'Operaciones sobre tripticos'},
+    #    {'name': 'ModeloV1', 'description': 'Operaciones sobre ModeloV1'},
+    #],
 }
