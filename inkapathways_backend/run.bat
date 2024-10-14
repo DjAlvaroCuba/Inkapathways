@@ -7,6 +7,9 @@ if not exist venv (
     call venv\Scripts\activate
     echo Instalando dependencias...
     pip install -r requirements.txt
+    python manage.py makemigrations api_users api_lugares api_root modelo_v1
+    python manage.py migrate api_users api_lugares api_root modelo_v1
+
 ) else (
     echo Activando entorno virtual...
     call venv\Scripts\activate

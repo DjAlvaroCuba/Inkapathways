@@ -2,9 +2,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from api_users.models import Usuario
 from rest_framework.generics import GenericAPIView
-
+from api_users.serializers import EmptySerializer
 class WelcomeView(GenericAPIView):
-    
+    serializer_class = EmptySerializer
     def post(self, request, *args, **kwargs):
         # Extrae el encabezado Authorization
         auth_header = request.headers.get('Authorization')
