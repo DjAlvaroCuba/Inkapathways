@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     # dependencias
     'rest_framework',
     'drf_spectacular',
-    
+    'corsheaders',
     # Aplicaciones internas
 
     'api_lugares',
@@ -50,11 +50,13 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'inkapathways_backend.urls'
