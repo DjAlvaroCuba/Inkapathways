@@ -6,7 +6,8 @@ from api_users.serializers import EmptySerializer
 import google.generativeai as genai
 from django.conf import settings
 from django.http import JsonResponse
-
+from api_users.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 class WelcomeView(GenericAPIView):
 
@@ -48,6 +49,9 @@ class WelcomeView(GenericAPIView):
         }, status=status.HTTP_200_OK)
     
 class PruebaIAView(GenericAPIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = EmptySerializer
     def post(self, request, *args, **kwargs):
         genai.configure(api_key=settings.GOOGLE_API_KEY)
         version = 'models/gemini-1.5-flash'
