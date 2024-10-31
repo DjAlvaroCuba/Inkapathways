@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
+import os
 import environ
 from pathlib import Path
 from datetime import timedelta
@@ -22,7 +23,10 @@ SECRET_KEY = env.str('SECRET_KEY')
 DEBUG = env.bool('DEBUG', default=True)
 
 ALLOWED_HOSTS = []
+
 CORS_ALLOW_ALL_ORIGINS = True
+#api
+GOOGLE_API_KEY = env('GOOGLE_API_KEY')
 
 # Application definition
 

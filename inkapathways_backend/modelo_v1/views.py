@@ -3,8 +3,15 @@ from rest_framework import status
 from api_users.models import Usuario
 from rest_framework.generics import GenericAPIView
 from api_users.serializers import EmptySerializer
+import google.generativeai as genai
+from django.conf import settings
+from django.http import JsonResponse
+
+
 class WelcomeView(GenericAPIView):
+
     serializer_class = EmptySerializer
+
     def post(self, request, *args, **kwargs):
         # Extrae el encabezado Authorization
         auth_header = request.headers.get('Authorization')
@@ -39,3 +46,23 @@ class WelcomeView(GenericAPIView):
                 "region": usuario.region
             }
         }, status=status.HTTP_200_OK)
+    
+class PruebaIAView(GenericAPIView):
+    def post(self, request, *args, **kwargs):
+        genai.configure(api_key=settings.GOOGLE_API_KEY)
+        version = 'models/gemini-1.5-flash'
+        model = genai.GenerativeModel(version)
+        datos_usuario = {
+            "nombre": "Modelo entrenado de Alvaro",
+            "intereses": "listo para resolver tus dudas y encontrar la mejor ruta de viaje a Junin"
+        }
+        prompt = f"Di lo siguiente: Hola soy el {datos_usuario['nombre']} y estoy {datos_usuario['intereses']}."
+
+        try:
+            # Generar contenido usando el modelo
+            response = model.generate_content(prompt)
+            # Retornar la respuesta como JSON
+            return JsonResponse({'response': response.text})
+        except Exception as e:
+            # Manejo de excepciones
+            return JsonResponse({'error': str(e)}, status=500)

@@ -1,8 +1,9 @@
 from rest_framework import status
 from rest_framework.response import Response
-
+from django.utils import timezone
+from datetime import timedelta
 from .models import Usuario
-from .serializers import UsuarioSerializer, EmptySerializer
+from .serializers import UsuarioSerializer, EmptySerializer , UsuarioLoginSerializer
 from django.contrib.auth.hashers import make_password, check_password
 import secrets  # Para generar un token único
 from api_users.authentication import TokenAuthentication
@@ -23,6 +24,7 @@ class RegistroUsuarioView(GenericAPIView):
 
             # Generar un token de verificación único
             token_verificacion = secrets.token_urlsafe(32)
+            usuario.fecha_expiracion_token = timezone.now() + timedelta(hours=1)
 
             # Guardar el token de verificación en el usuario
             usuario.token_verificacion = token_verificacion
@@ -37,7 +39,7 @@ class RegistroUsuarioView(GenericAPIView):
 
 class LoginUsuarioView(GenericAPIView):  # Mantener GenericAPIView
     # Usar UsuarioSerializer para validar el correo
-    serializer_class = UsuarioSerializer
+    serializer_class = UsuarioLoginSerializer
 
     def post(self, request, *args, **kwargs):
         # Solo extraer el correo y contraseña del request
@@ -59,6 +61,7 @@ class LoginUsuarioView(GenericAPIView):  # Mantener GenericAPIView
             token_verificacion = secrets.token_urlsafe(32)
             # Actualiza el token de verificación
             usuario.token_verificacion = token_verificacion
+            usuario.fecha_expiracion_token = timezone.now() + timedelta(hours=1)
             usuario.save()
 
             return Response({
@@ -109,4 +112,10 @@ class VistaProtegidaView(GenericAPIView):
     serializer_class = EmptySerializer
 
     def get(self, request, *args, **kwargs):
+        usuario = request.user  # Obtener el usuario autenticado
+
+        # Verificar si el token ha expirado
+        if usuario.fecha_expiracion_token and usuario.fecha_expiracion_token < timezone.now():
+            return Response({'error': 'El token ha expirado, por favor inicie sesión nuevamente.'}, status=status.HTTP_401_UNAUTHORIZED)
+
         return Response({'message': 'Accediste a una ruta protegida'}, status=status.HTTP_200_OK)

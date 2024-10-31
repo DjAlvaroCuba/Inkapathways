@@ -11,6 +11,7 @@ class Usuario(models.Model):
     correo_verificado = models.BooleanField(default=False)
     token_verificacion = models.CharField(
         max_length=255, blank=True, null=True)
+    fecha_expiracion_token = models.DateTimeField(blank=True, null=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 
     class Meta:

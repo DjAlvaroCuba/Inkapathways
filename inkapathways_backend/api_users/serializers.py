@@ -11,3 +11,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
 class EmptySerializer(serializers.Serializer):
     
     pass
+
+class UsuarioLoginSerializer(serializers.Serializer):
+    correo = serializers.EmailField(required=True)
+    contraseña_hash = serializers.CharField(required=True, write_only=True)
