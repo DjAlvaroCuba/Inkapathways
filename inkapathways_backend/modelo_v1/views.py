@@ -8,6 +8,10 @@ from django.conf import settings
 from django.http import JsonResponse
 from api_users.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+import json
+from django.utils import timezone
+from .questions import generate_question
 
 class WelcomeView(GenericAPIView):
 
@@ -48,25 +52,25 @@ class WelcomeView(GenericAPIView):
             }
         }, status=status.HTTP_200_OK)
     
-class PruebaIAView(GenericAPIView):
+
+class QuestionAPIView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
-    serializer_class = EmptySerializer
-    def post(self, request, *args, **kwargs):
-        genai.configure(api_key=settings.GOOGLE_API_KEY)
-        version = 'models/gemini-1.5-flash'
-        model = genai.GenerativeModel(version)
-        datos_usuario = {
-            "nombre": "Modelo entrenado de Alvaro",
-            "intereses": "listo para resolver tus dudas y encontrar la mejor ruta de viaje a Junin"
-        }
-        prompt = f"Di lo siguiente: Hola soy el {datos_usuario['nombre']} y estoy {datos_usuario['intereses']}."
 
-        try:
-            # Generar contenido usando el modelo
-            response = model.generate_content(prompt)
-            # Retornar la respuesta como JSON
-            return JsonResponse({'response': response.text})
-        except Exception as e:
-            # Manejo de excepciones
-            return JsonResponse({'error': str(e)}, status=500)
+    def post(self, request):
+        usuario = request.user  # Obtener el usuario autenticado
+
+        # Verificar si el token ha expirado
+        if usuario.fecha_expiracion_token and usuario.fecha_expiracion_token < timezone.now():
+            return Response({'error': 'El token ha expirado, por favor inicie sesión nuevamente.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        previous_question = request.data.get('previous_question', '')
+        previous_response = request.data.get('previous_response', '')
+
+        # Generar la nueva pregunta
+        question_data = generate_question(previous_question, previous_response)
+
+        if question_data:
+            return Response(question_data)
+        
+        return Response({"error": "No se pudo generar la pregunta"}, status=status.HTTP_400_BAD_REQUEST)
