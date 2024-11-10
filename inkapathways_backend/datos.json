@@ -1,0 +1,41 @@
+{
+    "comida": {
+        "Pachamanca": {
+            "Ingrediente principal": "Carne",
+            "Ingrediente secundario": "papa peruana"
+        },
+        "Cuy Colorado": {
+            "Ingrediente principal": "Cuy",
+            "Ingrediente secundario": "aji panca"
+        },
+        "Caldo de mondongo": {
+            "Ingrediente principal": "Mondongo",
+            "Ingrediente secundario": "maiz"
+        },
+        "Picante de cuy": {
+            "Ingrediente principal": "Cuy",
+            "Ingrediente secundario": "aji panca"
+        },
+        "Caldo de cuy": {
+            "Ingrediente principal": "Cuy",
+            "Ingrediente secundario": "tallarin"
+        },
+        "Cuy frito": {
+            "Ingrediente principal": "Cuy",
+            "Ingrediente secundario": "papa peruana"
+        },
+        "Carapulcra": {
+            "Ingrediente principal": "Carne",
+            "Ingrediente secundario": "tallarin"
+        },
+        "Lomo saltado": {
+            "Ingrediente principal": "Carne",
+            "Ingrediente secundario": "arroz blanco"
+        },
+        "Caldo de cabeza": {
+            "Ingrediente principal": "Mondongo",
+            "Ingrediente secundario": "maiz"
+        }
+    },
+    "transporte": "Aun no contamos con transporte, gracias"
+}

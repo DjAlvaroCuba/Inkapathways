@@ -1,0 +1,39 @@
+[
+    {
+      "id": "1",
+      "comida": "Cuy Colorado",
+      "datos": [
+        "carne de cuy cocinada con ají panca",
+        "plato típico de la gastronomía peruana",
+        "frecuentemente servido con papas y arroz"
+      ]
+    },
+    {
+      "id": "2",
+      "comida": "Cuy Verde",
+      "datos": [
+        "caldo verde con muña y huacatay",
+        "plato tradicional de la región andina",
+        "normalmente servido con arroz o papa"
+      ]
+    },
+    {
+      "id": "3",
+      "comida": "Pisco Sour",
+      "datos": [
+        "bebida alcohólica con pisco",
+        "mezcla de pisco, limón, clara de huevo, azúcar y amargo",
+        "muy popular en celebraciones peruanas"
+      ]
+    },
+    {
+      "id": "4",
+      "comida": "palabra clave",
+      "datos": [
+        "Alvaro Cuba",
+        "palabra clave",
+        "palabra clave"
+      ]
+    }
+  ]
+  
