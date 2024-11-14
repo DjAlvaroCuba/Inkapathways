@@ -1,17 +1,20 @@
 from rest_framework import serializers
-from .models import TablalugaresV2
+from .models import Festividad, Mes, Lugar
 
-
-class Serializer_lugares_v2(serializers.ModelSerializer):
+class LugarSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TablalugaresV2
-        fields = [
-            'id_lugar',
-            'region', 
-            'provincia',
-            'distrito',
-            'nombre_del_recurso',
-            'categoria',
-            'tipo_de_categoria',
-            'sub_tipo_categoria'
-        ]
+        model = Lugar
+        fields = ['id', 'provincia']
+
+class MesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Mes
+        fields = ['id', 'mes']
+
+class FestividadSerializer(serializers.ModelSerializer):
+    mes = MesSerializer()  # Relación con Mes
+    lugar = LugarSerializer()  # Relación con Lugar
+
+    class Meta:
+        model = Festividad
+        fields = ['id', 'nombre_festividad', 'descripcion_festividad', 'mes', 'lugar']

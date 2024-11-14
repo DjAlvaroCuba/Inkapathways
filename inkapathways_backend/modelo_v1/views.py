@@ -119,7 +119,7 @@ class PreguntasAPI(APIView):
         
         # Paso 1: Obtener contexto relevante usando la lógica de la vista 'SearchComidasAPIView'
         embedding_consulta = obtener_embeddings(prompt).numpy().reshape(1, -1)  # Obtener el embedding de la consulta
-        distancias, indices = index.search(embedding_consulta, k=5)  # Buscar en el índice FAISS
+        distancias, indices = index.search(embedding_consulta, k=10)  # Buscar en el índice FAISS
 
         retrieved_context = []  # Lista para almacenar los fragmentos de contexto recuperados
         for i, idx in enumerate(indices[0]):
@@ -132,7 +132,9 @@ class PreguntasAPI(APIView):
         # Unir los fragmentos de contexto recuperados en una cadena
         context_text = " ".join(retrieved_context[:3])  # Limitar a los primeros tres fragmentos
         system_prompt = (  # Crear el mensaje de sistema para el modelo de generación
-            "Tú eres un asistente para tareas de respuesta a preguntas. "
+            "Tú eres un guia turistico y quieres generar intereses en la comida peruana"
+            "Genera una pregunta nueva en cada ocasion y 4 alternativas para marcar y para saber gustos del turista secuencialmente"
+            "Usa el idioma español"
             "Usa los siguientes fragmentos de contexto recuperado para responder "
             "la pregunta. Si no sabes la respuesta, di que no sabes. "
             "Usa un máximo de tres oraciones y mantén la respuesta concisa."

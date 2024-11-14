@@ -1,11 +1,13 @@
-from rest_framework import generics
-from .models import TablalugaresV2
-from .serializers import Serializer_lugares_v2
+
+from rest_framework.generics import ListAPIView
 from api_users.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from .models import Festividad
+from .serializers import FestividadSerializer
 
-class getLugaresTuristicos(generics.ListAPIView):
-    queryset = TablalugaresV2.objects.filter(region='Junín')
-    serializer_class = Serializer_lugares_v2
+
+class FestividadListView(ListAPIView):
+    queryset = Festividad.objects.all()  # Trae todas las festividades
+    serializer_class = FestividadSerializer  # U
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]

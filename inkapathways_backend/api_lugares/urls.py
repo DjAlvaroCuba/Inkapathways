@@ -1,8 +1,8 @@
 from django.urls import path
-from .views import getLugaresTuristicos
+from .views import FestividadListView
 
 
 urlpatterns = [
-    path('v2/', getLugaresTuristicos.as_view(), name='tu_modelo_list'),  
+    path('v1/', FestividadListView.as_view(), name='lista'),  
     
 ]

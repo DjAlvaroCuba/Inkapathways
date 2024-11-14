@@ -1,39 +1,183 @@
 [
-    {
-      "id": "1",
-      "comida": "Cuy Colorado",
+  {
+    "id": "1",
+    "comida": "Cuy Colorado",
+    "datos": [
+      "carne de cuy cocinada con ají panca",
+      "Cuy Colorado es un plato típico de la gastronomía peruana",
+      "frecuentemente servido con papas y arroz"
+    ]
+  },
+  {
+    "id": "2",
+    "comida": "Pachamanca",
+    "datos": [
+      "cocción en tierra con piedras calientes", 
+      "la Pachamanca es marinada en hierbas andinas", 
+      "la Pachamanca consta de una variedad de carnes (pollo, cerdo, cordero)"
+    ]
+  },
+  {
+    "id": "3",
+    "comida": "Caldo de Mondongo",
+    "datos": [
+      "caldo espeso de maíz blanco y mondongo", 
+      "el Caldo de Mondongo es sazonado con hierbas andinas", 
+      "comida nutritiva para el desayuno"
+    ]
+  }, 
+  {
+    "id": "4",
+    "comida": "Sopa Verde",
+    "datos": [
+      "caldo verde con muña y huacatay", 
+      "preparado con carne de carnero o pollo", 
+      "acompañado de papas andinas"
+    ]
+  }, 
+  {
+    "id": "5",
+    "comida": "Trucha Frita",
+    "datos": [
+      "trucha fresca de los ríos andinos", 
+      "frita y servida con papas y ensalada", 
+      "marinada con ajo y limón"
+    ]
+  }, 
+  {
+    "id": "6",
+    "comida": "Arroz con Mariscos",
+    "datos": [
+      "arroz sazonado con ají amarillo y pimientos", 
+      "para el Arroz con Mariscos se utiliza una mezcla de mariscos frescos", 
+      "sabor intenso a hierbas y limón"
+    ]
+  },
+  {
+    "id": "7",
+    "comida": "Chicha de Jora",
+    "datos": [
+      "bebida fermentada a base de maíz",
+      "sabor ácido y dulce",
+      "tradición ceremonial andina"
+    ]
+  },
+  {
+    "id": "8",
+    "comida": "Picante de Cuy",
+    "datos": [
+      "cuy cocinado en salsa picante",
+      "acompañado de papas y arroz",
+      "sabor fuerte y distintivo"
+    ]
+  },
+  {
+    "id": "9",
+    "comida": "Pisco Sour",
+    "datos": [
+      "bebida alcohólica con pisco",
+      "bebida que es la mezcla de pisco, limón, clara de huevo y azúcar",
+      "muy popular en celebraciones peruanas"
+    ]
+  },
+  {
+    "id": "10",
+    "comida": "Trago de Algarrobina",
+    "datos": [
+      "bebida preparada con pisco y algarrobina",
+      "sabor dulce y cremoso",
+      "consumido como aperitivo"
+    ]
+  },
+  {
+    "id": "11",
+    "comida": "Aguaymanto",
+    "datos": [
+      "fruta amarilla de sabor dulce y ácido",
+      "usada en postres y mermeladas",
+      "rico en antioxidantes"
+    ]
+  },
+  {
+    "id": "12",
+    "comida": "Ensalada de Chocho",
+    "datos": [
+      "ensalada a base de tarwi (chocho)",
+      "mezclada con cebolla, tomate y limón",
+      "alta en proteínas vegetales"
+    ]
+  },
+  {
+    "id": "13",
+    "comida": "Ponche de Habas",
+    "datos": [
+      "bebida caliente a base de habas",
+      "sazonada con canela y azúcar",
+      "ideal para el frío andino"
+    ]
+  },
+  {
+    "id": "14",
+    "comida": "Humitas",
+    "datos": [
+      "masa de maíz rellena con queso o carne", 
+      "envuelta y cocida en hojas de maíz", 
+      "dulce o salada según preparación"
+    ]
+  },
+  {
+    "id": "15",
+    "comida": "Papa a la Huancaína",
+    "datos": [
+      "papas blancas, lechuga, huevos, aji amarillo, aceitunas, galletas soda, queso, leche y sal ", 
+      "se adorna con las hojas de lechuga", 
+      "plato típico de Huancayo es uno de los más representativos, ya que es conocido en todo el Perú"
+    ]
+  },
+  {
+    "id": "16",
+    "comida": "Caldo de Patachi",
+    "datos": [
+      "trigo pelado, arvejas, habas, carne de vacuno, charqui (carne seca), piel de cerdo, patitas y menudencia", 
+      "se deja a fuego lento varias horas", 
+      "Patachi proviene del quechua y hace referencia a la mezcla de ingredientes que conforman este delicioso platillo"
+    ]
+  },
+  {
+    "id": "17",
+    "comida": "Seco de Cabrito",
+    "datos": [
+      "guiso de cabrito con culantro",
+      "sabor fuerte y concentrado",
+      "acompañado de yuca o arroz"
+    ]
+  },
+  {
+    "id": "18",
+    "comida": "Api",
+    "datos": [
+        "bebida espesa de maíz morado",
+        "sazonada con canela y clavo de olor",
+        "dulce y aromática, ideal para climas fríos"
+    ]
+  },
+  {
+      "id": "19",
+      "comida": "Queso Helado",
       "datos": [
-        "carne de cuy cocinada con ají panca",
-        "plato típico de la gastronomía peruana",
-        "frecuentemente servido con papas y arroz"
+          "postre helado de leche y canela",
+          "originario de regiones andinas",
+          "textura cremosa y sabor suave"
       ]
-    },
-    {
-      "id": "2",
-      "comida": "Cuy Verde",
+  },
+  {
+      "id": "20",
+      "comida": "Caldo de Cabeza",
       "datos": [
-        "caldo verde con muña y huacatay",
-        "plato tradicional de la región andina",
-        "normalmente servido con arroz o papa"
+          "caldo preparado con cabeza de carnero",
+          "rico en proteínas y minerales",
+          "tradicional para recuperar energías"
       ]
-    },
-    {
-      "id": "3",
-      "comida": "Pisco Sour",
-      "datos": [
-        "bebida alcohólica con pisco",
-        "mezcla de pisco, limón, clara de huevo, azúcar y amargo",
-        "muy popular en celebraciones peruanas"
-      ]
-    },
-    {
-      "id": "4",
-      "comida": "palabra clave",
-      "datos": [
-        "Alvaro Cuba  ",
-        "palabra clave",
-        "palabra clave"
-      ]
-    }
-  ]
-  
+  }
+
+]

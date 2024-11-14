@@ -1,19 +1,22 @@
 from django.db import models
 
+class Lugar(models.Model):
+    provincia = models.TextField()
 
-class TablalugaresV2(models.Model):
-    region = models.TextField(db_column='REGION', blank=True, null=True)
-    provincia = models.TextField(db_column='PROVINCIA', blank=True, null=True)
-    distrito = models.TextField(db_column='DISTRITO', blank=True, null=True)
-    nombre_del_recurso = models.TextField(
-        db_column='NOMBRE DEL RECURSO', blank=True, null=True)
-    categoria = models.TextField(db_column='CATEGORIA', blank=True, null=True)
-    tipo_de_categoria = models.TextField(
-        db_column='TIPO DE CATEGORIA', blank=True, null=True)
-    sub_tipo_categoria = models.TextField(
-        db_column='SUB TIPO CATEGORIA', blank=True, null=True)
-    id_lugar = models.IntegerField(db_column='Id_lugar', primary_key=True)
+    def __str__(self):
+        return self.provincia
 
-    class Meta:
-        managed = False
-        db_table = 'tablalugares_v2'
+class Mes(models.Model):
+    mes = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.mes
+
+class Festividad(models.Model):
+    nombre_festividad = models.CharField(max_length=100)
+    descripcion_festividad = models.TextField()
+    mes = models.ForeignKey(Mes, on_delete=models.CASCADE, null=True, blank=True)
+    lugar = models.ForeignKey(Lugar, on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre_festividad
