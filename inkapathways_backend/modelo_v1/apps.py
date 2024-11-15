@@ -4,7 +4,7 @@ import numpy as np
 import torch
 from transformers import AutoTokenizer, AutoModel
 import os
-
+from pathlib import Path
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 class ModeloV1Config(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
@@ -16,7 +16,8 @@ class ModeloV1Config(AppConfig):
 
     def generar_embeddings(self):
         # Cargar el archivo JSON con los datos de las comidas
-        file_path = 'C:/Users/USUARIO/Documents/Inkapathways/Backend/inkapathways_backend/modelo_v1/pdf_juninv1.2.json'  # Cambia esta ruta si es necesario
+        BASE_DIR = Path(__file__).resolve().parent.parent
+        file_path = BASE_DIR / 'modelo_v1' / 'comidas_con_embeddings.json'  # Cambia esta ruta si es necesario
         with open(file_path, 'r', encoding='utf-8') as f:
             comidas = json.load(f)
 

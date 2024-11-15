@@ -14,9 +14,10 @@ from api_users.serializers import EmptySerializer  # Serializador vacío
 from rest_framework.generics import GenericAPIView  # Vista genérica de Django REST Framework
 import google.generativeai as genai  # Librería para usar Google Generative AI
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"  # Configuración para evitar errores de duplicación de librerías en PyTorch
-
+from pathlib import Path
 # Cargar el archivo JSON que contiene los datos de las comidas y los embeddings generados
-file_path = 'C:/Users/USUARIO/Documents/Inkapathways/Backend/inkapathways_backend/modelo_v1/comidas_con_embeddings.json'  # Ruta del archivo JSON con los datos
+BASE_DIR = Path(__file__).resolve().parent.parent
+file_path = BASE_DIR / 'modelo_v1' / 'comidas_con_embeddings.json'  # Ruta del archivo JSON con los datos
 with open(file_path, 'r', encoding='utf-8') as f:
     comidas_cargadas = json.load(f)  # Cargar los datos desde el archivo JSON
 
