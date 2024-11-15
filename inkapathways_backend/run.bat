@@ -6,7 +6,8 @@ if not exist venv (
     python -m venv venv
     call venv\Scripts\activate
     echo Instalando dependencias...
-    pip install -r requirements.txt
+    pip install -r requirements.txt --use-deprecated=legacy-resolver --no-deps --force-reinstall
+
 
 ) else (
     echo Activando entorno virtual...
