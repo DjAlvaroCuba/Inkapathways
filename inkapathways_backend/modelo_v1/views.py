@@ -7,12 +7,16 @@ from django.conf import settings  # Configuración del proyecto Django
 import numpy as np  # Módulo para trabajar con matrices y cálculos numéricos
 import faiss  # Módulo para índices de búsqueda eficientes en embeddings
 from transformers import AutoTokenizer, AutoModel  # Herramientas para usar modelos de transformers de Hugging Face
+from api_users.models import Usuario
+from api_root.models import Pregunta, Respuesta
 import torch  # Módulo para usar PyTorch, la librería de machine learning
 import os  # Módulo para manejar funciones del sistema operativo
 from api_users.models import Usuario  # Importación del modelo 'Usuario' desde la app 'api_users'
 from api_users.serializers import EmptySerializer  # Serializador vacío
 from rest_framework.generics import GenericAPIView  # Vista genérica de Django REST Framework
 import google.generativeai as genai  # Librería para usar Google Generative AI
+from api_users.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"  # Configuración para evitar errores de duplicación de librerías en PyTorch
 from pathlib import Path
 # Cargar el archivo JSON que contiene los datos de las comidas y los embeddings generados
@@ -82,6 +86,9 @@ class WelcomeView(GenericAPIView):
 
 # Vista para manejar las consultas de comidas (búsqueda)
 class SearchComidasAPIView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = EmptySerializer
     def post(self, request):
         consulta = request.data.get('consulta', '')  # Obtener la consulta desde los datos de la solicitud
         if not consulta:  # Si no se proporcionó una consulta
@@ -112,17 +119,20 @@ class SearchComidasAPIView(APIView):
 
 # Vista para generar respuestas basadas en preguntas
 class PreguntasAPI(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     def post(self, request):
         # Obtener el 'prompt' de la solicitud
         prompt = request.data.get("prompt")
-        if not prompt:  # Si no se proporciona un prompt
+        if not prompt:
             return Response({"error": "El campo 'prompt' es requerido."}, status=status.HTTP_400_BAD_REQUEST)
         
         # Paso 1: Obtener contexto relevante usando la lógica de la vista 'SearchComidasAPIView'
-        embedding_consulta = obtener_embeddings(prompt).numpy().reshape(1, -1)  # Obtener el embedding de la consulta
-        distancias, indices = index.search(embedding_consulta, k=10)  # Buscar en el índice FAISS
-
-        retrieved_context = []  # Lista para almacenar los fragmentos de contexto recuperados
+        embedding_consulta = obtener_embeddings(prompt).numpy().reshape(1, -1)
+        distancias, indices = index.search(embedding_consulta, k=10)
+        
+        retrieved_context = []
         for i, idx in enumerate(indices[0]):
             comida_index = idx // len(comidas_cargadas[0]['embeddings'])
             dato_index = idx % len(comidas_cargadas[comida_index]['embeddings'])
@@ -130,46 +140,46 @@ class PreguntasAPI(APIView):
             dato = comida['datos'][dato_index]
             retrieved_context.append(f"{comida['comida']}: {dato}")
 
-        # Unir los fragmentos de contexto recuperados en una cadena
-        context_text = " ".join(retrieved_context[:3])  
+        context_text = " ".join(retrieved_context[:3])
+        
+        # Paso 2: Configurar y enviar la solicitud al modelo generativo
         genai.configure(api_key=settings.GOOGLE_API_KEY)
         system_instruction = (
-        "Tú eres un guía turístico y quieres generar interés en la comida peruana. "
-        "Con el fin de conocer los gustos del turista de manera secuencial, formula una pregunta y  proporciona 4 alternativas usando el dato comida para que el turista seleccione, basado en la respuesta anterior. "
-        "Usa el idioma español y utiliza los siguientes fragmentos de contexto recuperado para  formular la pregunta y las alternativas: "
-        "Si el contexto no contiene la información necesaria, di que no lo sabes. "
-        "Contexto recuperado:"
-        f"{context_text}"
-)
-        model = genai.GenerativeModel("gemini-1.5-flash-latest",
-                              generation_config={"response_mime_type": "application/json"})
+            "Tú eres un guía turístico y quieres generar interés en la comida peruana. "
+            "Formula una pregunta y proporciona 4 alternativas usando el dato comida. "
+            "Usa el español y el contexto recuperado para formular la pregunta y las alternativas: "
+            f"Contexto recuperado: {context_text}"
+        )
+        
+        model = genai.GenerativeModel("gemini-1.5-flash-latest", generation_config={"response_mime_type": "application/json"})
         chat = model.start_chat()
         message_response = chat.send_message(f"{system_instruction}\n\n{prompt}").text
-        # Paso 3: Usar el modelo generativo de Google AI para obtener la respuesta
-        #genai.configure(api_key=settings.GOOGLE_API_KEY)  # Configurar la API de Google
-        #model = genai.GenerativeModel("gemini-1.5-flash-latest", generation_config={"response_mime_type": "application/json"})  # Configurar el modelo generativo
 
-        # Enviar el prompt al modelo generativo de Google
-        #chat = model.start_chat()  # Iniciar una nueva conversación
-        #message_response = chat.send_message(f"{system_instruction}\n\n{prompt}").text  # Obtener la respuesta del modelo generativo
-        
-        # Paso 4: Si no se encontró contexto relevante, usar el modelo para generar una respuesta
+        # Paso 3: Procesar la respuesta del modelo y guardar en la base de datos
         try:
-           
             response_data = json.loads(message_response)
-
-    
-            formatted_response = {
-            "pregunta": response_data.get("pregunta", ""),
-            "alternativa1": response_data.get("alternativas", [])[0] if len(response_data.get("alternativas", [])) > 0 else "",
-            "alternativa2": response_data.get("alternativas", [])[1] if len(response_data.get("alternativas", [])) > 1 else "",
-            "alternativa3": response_data.get("alternativas", [])[2] if len(response_data.get("alternativas", [])) > 2 else "",
-            "alternativa4": response_data.get("alternativas", [])[3] if len(response_data.get("alternativas", [])) > 3 else ""
-        }
-        except json.JSONDecodeError:
+            pregunta_texto = response_data.get("pregunta", "")
+            alternativas = response_data.get("alternativas", [])
             
-            formatted_response = {
-                "error": "No se pudo parsear la respuesta en formato JSON"}
+            # Obtener el usuario autenticado
+            usuario = request.user
 
+            # Guardar la pregunta en la base de datos
+            pregunta = Pregunta.objects.create(usuario=usuario, pregunta=pregunta_texto)
+
+            # Guardar cada alternativa como una respuesta en la base de datos
+            for alternativa in alternativas:
+                Respuesta.objects.create(usuario=usuario, pregunta=pregunta, respuesta=alternativa)
+
+            # Formatear la respuesta para el cliente
+            formatted_response = {
+                "pregunta": pregunta_texto,
+                "alternativa1": alternativas[0] if len(alternativas) > 0 else "",
+                "alternativa2": alternativas[1] if len(alternativas) > 1 else "",
+                "alternativa3": alternativas[2] if len(alternativas) > 2 else "",
+                "alternativa4": alternativas[3] if len(alternativas) > 3 else ""
+            }
+        except json.JSONDecodeError:
+            formatted_response = {"error": "No se pudo parsear la respuesta en formato JSON"}
 
         return Response(formatted_response, status=status.HTTP_200_OK)
