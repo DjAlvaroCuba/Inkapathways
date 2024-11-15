@@ -8,6 +8,6 @@ from .serializers import FestividadSerializer
 
 class FestividadListView(ListAPIView):
     queryset = Festividad.objects.all()  # Trae todas las festividades
-    serializer_class = FestividadSerializer  # U
+    serializer_class = FestividadSerializer  
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]

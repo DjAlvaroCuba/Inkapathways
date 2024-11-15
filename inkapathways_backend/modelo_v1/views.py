@@ -77,6 +77,7 @@ class WelcomeView(GenericAPIView):
         return Response({
             "message": f"Hola {usuario.nombre}, bienvenido a Inkapathways!",  # Mensaje de bienvenida personalizado
             "credenciales": {  # Información adicional del usuario
+                
                 "correo": usuario.correo,
                 "nombre": usuario.nombre,
                 "apellido": usuario.apellido,
@@ -168,8 +169,11 @@ class PreguntasAPI(APIView):
             pregunta = Pregunta.objects.create(usuario=usuario, pregunta=pregunta_texto)
 
             # Guardar cada alternativa como una respuesta en la base de datos
-            for alternativa in alternativas:
-                Respuesta.objects.create(usuario=usuario, pregunta=pregunta, respuesta=alternativa)
+            Respuesta.objects.create(
+                usuario=usuario,
+                pregunta=pregunta,
+                respuesta=prompt  # Guardar lo que el usuario seleccionó como respuesta
+            )
 
             # Formatear la respuesta para el cliente
             formatted_response = {
