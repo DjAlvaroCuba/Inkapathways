@@ -154,12 +154,22 @@ class PreguntasAPI(APIView):
         #message_response = chat.send_message(f"{system_instruction}\n\n{prompt}").text  # Obtener la respuesta del modelo generativo
         
         # Paso 4: Si no se encontró contexto relevante, usar el modelo para generar una respuesta
-        if not retrieved_context:
-            prompt = (  # Si no se encuentra contexto, ajustar el prompt
-                "No se encontró contexto relevante. Responde directamente a la pregunta: " + prompt
-            )
-            response = model.start_chat(history=[{"text": prompt}]).text  # Obtener la respuesta
-        else:
-            response = message_response  
-        # Retornar la respuesta generada
-        return Response({"response": response}, status=status.HTTP_200_OK)
+        try:
+           
+            response_data = json.loads(message_response)
+
+    
+            formatted_response = {
+            "pregunta": response_data.get("pregunta", ""),
+            "alternativa1": response_data.get("alternativas", [])[0] if len(response_data.get("alternativas", [])) > 0 else "",
+            "alternativa2": response_data.get("alternativas", [])[1] if len(response_data.get("alternativas", [])) > 1 else "",
+            "alternativa3": response_data.get("alternativas", [])[2] if len(response_data.get("alternativas", [])) > 2 else "",
+            "alternativa4": response_data.get("alternativas", [])[3] if len(response_data.get("alternativas", [])) > 3 else ""
+        }
+        except json.JSONDecodeError:
+            
+            formatted_response = {
+                "error": "No se pudo parsear la respuesta en formato JSON"}
+
+
+        return Response(formatted_response, status=status.HTTP_200_OK)
