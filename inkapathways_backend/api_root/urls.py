@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import UserAdminView
+from .views import PreguntaList, RespuestaList
 urlpatterns = [
-    path('users/', UserAdminView.as_view(), name='usuarios'),
-    
+    path('preguntas/', PreguntaList.as_view(), name='pregunta-list'),
+    path('respuestas/', RespuestaList.as_view(), name='respuesta-list'),
 ]

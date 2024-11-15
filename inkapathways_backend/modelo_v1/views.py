@@ -130,25 +130,27 @@ class PreguntasAPI(APIView):
             retrieved_context.append(f"{comida['comida']}: {dato}")
 
         # Unir los fragmentos de contexto recuperados en una cadena
-        context_text = " ".join(retrieved_context[:3])  # Limitar a los primeros tres fragmentos
-        system_prompt = (  # Crear el mensaje de sistema para el modelo de generación
-            "Tú eres un guia turistico y quieres generar intereses en la comida peruana"
-            "Genera una pregunta nueva en cada ocasion y 4 alternativas para marcar y para saber gustos del turista secuencialmente"
-            "Usa el idioma español"
-            "Usa los siguientes fragmentos de contexto recuperado para responder "
-            "la pregunta. Si no sabes la respuesta, di que no sabes. "
-            "Usa un máximo de tres oraciones y mantén la respuesta concisa."
-            "\n\n"
-            f"{context_text}"
-        )
-        
+        context_text = " ".join(retrieved_context[:3])  
+        genai.configure(api_key=settings.GOOGLE_API_KEY)
+        system_instruction = (
+        "Tú eres un guía turístico y quieres generar interés en la comida peruana. "
+        "Con el fin de conocer los gustos del turista de manera secuencial, formula una pregunta y  proporciona 4 alternativas usando el dato comida para que el turista seleccione, basado en la respuesta anterior. "
+        "Usa el idioma español y utiliza los siguientes fragmentos de contexto recuperado para  formular la pregunta y las alternativas: "
+        "Si el contexto no contiene la información necesaria, di que no lo sabes. "
+        "Contexto recuperado:"
+        f"{context_text}"
+)
+        model = genai.GenerativeModel("gemini-1.5-flash-latest",
+                              generation_config={"response_mime_type": "application/json"})
+        chat = model.start_chat()
+        message_response = chat.send_message(f"{system_instruction}\n\n{prompt}").text
         # Paso 3: Usar el modelo generativo de Google AI para obtener la respuesta
-        genai.configure(api_key=settings.GOOGLE_API_KEY)  # Configurar la API de Google
-        model = genai.GenerativeModel("gemini-1.5-flash-latest", generation_config={"response_mime_type": "application/json"})  # Configurar el modelo generativo
+        #genai.configure(api_key=settings.GOOGLE_API_KEY)  # Configurar la API de Google
+        #model = genai.GenerativeModel("gemini-1.5-flash-latest", generation_config={"response_mime_type": "application/json"})  # Configurar el modelo generativo
 
         # Enviar el prompt al modelo generativo de Google
-        chat = model.start_chat(history=[])  # Iniciar una nueva conversación
-        message_response = chat.send_message(f"{system_prompt}\n\n{prompt}").text  # Obtener la respuesta del modelo generativo
+        #chat = model.start_chat()  # Iniciar una nueva conversación
+        #message_response = chat.send_message(f"{system_instruction}\n\n{prompt}").text  # Obtener la respuesta del modelo generativo
         
         # Paso 4: Si no se encontró contexto relevante, usar el modelo para generar una respuesta
         if not retrieved_context:
@@ -157,7 +159,6 @@ class PreguntasAPI(APIView):
             )
             response = model.start_chat(history=[{"text": prompt}]).text  # Obtener la respuesta
         else:
-            response = message_response  # Si se encontró contexto, usar la respuesta generada
-
+            response = message_response  
         # Retornar la respuesta generada
         return Response({"response": response}, status=status.HTTP_200_OK)
