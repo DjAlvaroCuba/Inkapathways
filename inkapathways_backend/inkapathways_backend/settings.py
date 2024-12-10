@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'corsheaders',
     # Aplicaciones internas
-    
     'api_lugares',
     'api_root',
     'api_users',

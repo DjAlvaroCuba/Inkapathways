@@ -6,8 +6,7 @@ class Usuario(models.Model):
     apellido = models.CharField(max_length=100)
     correo = models.EmailField(unique=True)
     contraseña_hash = models.CharField(max_length=100)
-    region = models.CharField(max_length=10, choices=[
-                              ('Junin', 'Junin'), ('Lima', 'Lima')])
+    lugar_procedencia = models.CharField(max_length=100)
     correo_verificado = models.BooleanField(default=False)
     token_verificacion = models.CharField(
         max_length=255, blank=True, null=True)
@@ -22,4 +21,4 @@ class Usuario(models.Model):
     
     @property
     def is_authenticated(self):
-        return True  # Indica que este objeto representa un usuario autenticado
+        return True  

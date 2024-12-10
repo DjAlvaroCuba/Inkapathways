@@ -11,13 +11,13 @@ class ModeloV1Config(AppConfig):
     name = 'modelo_v1'
 
     def ready(self):
-        # Ejecutar el proceso de generación de embeddings al iniciar el proyecto
+        
         self.generar_embeddings()
 
     def generar_embeddings(self):
-        # Cargar el archivo JSON con los datos de las comidas
+        
         BASE_DIR = Path(__file__).resolve().parent.parent
-        file_path = BASE_DIR / 'modelo_v1' / 'comidas_con_embeddings.json'  # Cambia esta ruta si es necesario
+        file_path = BASE_DIR / 'modelo_v1' / 'comidas_con_embeddings.json' 
         with open(file_path, 'r', encoding='utf-8') as f:
             comidas = json.load(f)
 
