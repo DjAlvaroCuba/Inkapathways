@@ -36,10 +36,12 @@ class TripticoCreateAPIView(CreateAPIView):
     serializer_class = TripticosSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
+
     def post(self, request, *args, **kwargs):
-        serializer = TripticosSerializer(data=request.data)
+        # Incluye el contexto con la solicitud actual
+        serializer = TripticosSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
-            # Guardar el nuevo Triptico
+            # Guardar el nuevo Tríptico
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

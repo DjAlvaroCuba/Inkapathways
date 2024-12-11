@@ -16,32 +16,42 @@ class RespuestaSerializer(serializers.ModelSerializer):
         fields = ['id', 'usuario', 'pregunta', 'respuesta', 'fecha_creacion']
 
 class TripticosSerializer(serializers.ModelSerializer):
-    # Usar RespuestaSerializer para incluir detalles completos de las respuestas en la salida
-    comidas = RespuestaSerializer(many=True, read_only=True)
-
-    # Usar PrimaryKeyRelatedField para permitir enviar solo los IDs al crear/actualizar
-    comidas_ids = serializers.PrimaryKeyRelatedField(
+    # Incluye detalles completos de las respuestas asociadas en la salida
+    comidas = serializers.PrimaryKeyRelatedField(
         many=True,
-        queryset=Respuesta.objects.all(),
-        write_only=True
+        read_only=True
     )
 
     class Meta:
         model = Tripticos
-        fields = '__all__'  # Incluye todos los campos
-        extra_kwargs = {
-            'usuario': {'required': False},  # Opcional si el usuario se asigna automáticamente
-        }
+        exclude = ['usuario']  # Excluir explícitamente 'usuario' de los datos recibidos
+
+    def validate(self, attrs):
+        """Validar que las fechas sean coherentes."""
+        if attrs['fecha_salida'] > attrs['fecha_retorno']:
+            raise serializers.ValidationError("La fecha de salida no puede ser posterior a la fecha de retorno.")
+        return attrs
 
     def create(self, validated_data):
-        comidas_ids = validated_data.pop('comidas_ids', [])
+        """Crear un nuevo Triptico asociando usuario y respuestas automáticamente."""
+        user = self.context['request'].user  # Identificar usuario autenticado
+        validated_data['usuario'] = user
+
+        # Obtener las respuestas relacionadas con el usuario autenticado
+        respuestas_usuario = Respuesta.objects.filter(usuario=user)
+
+        # Crear el Triptico
         triptico = Tripticos.objects.create(**validated_data)
-        triptico.comidas.set(comidas_ids)  # Asocia las respuestas seleccionadas
+
+        # Asociar respuestas automáticamente
+        triptico.comidas.set(respuestas_usuario)
         return triptico
 
     def update(self, instance, validated_data):
-        comidas_ids = validated_data.pop('comidas_ids', None)
-        if comidas_ids is not None:
-            instance.comidas.set(comidas_ids)  # Actualiza las relaciones de comidas
+        """Actualizar el Triptico y asociar respuestas automáticamente."""
+        user = self.context['request'].user  # Identificar usuario autenticado
+        respuestas_usuario = Respuesta.objects.filter(usuario=user)
+
+        # Asociar respuestas automáticamente
+        instance.comidas.set(respuestas_usuario)
         return super().update(instance, validated_data)
-    
